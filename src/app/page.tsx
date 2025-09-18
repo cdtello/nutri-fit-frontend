@@ -1,103 +1,145 @@
-import Image from "next/image";
+// Importamos Link de Next.js para navegación rápida entre páginas
+import Link from 'next/link';
 
+// Esta es nuestra página principal (Home) - se muestra en la ruta "/"
 export default function Home() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <main className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
+      {/* Sección principal con título y descripción */}
+      <div className="relative py-16 px-6">
+        <div className="max-w-6xl mx-auto text-center">
+          <div className="mb-8">
+            {/* Título principal de nuestra app */}
+            <h1 className="text-6xl font-bold text-gray-800 mb-4">
+              🥗 <span className="text-blue-600">Nutri</span><span className="text-green-600">Fit</span>
+            </h1>
+            {/* Descripción de lo que hace nuestra app */}
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+              Tu plataforma integral para un estilo de vida saludable. 
+              Nutrición personalizada, entrenamientos efectivos y seguimiento completo.
+            </p>
+          </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+            <Link 
+              href="/users" 
+              className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1"
+            >
+              👥 Ver Equipo
+            </Link>
+            <button className="bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1">
+              📊 Dashboard
+            </button>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </div>
+
+      {/* Features Section */}
+      <div className="py-16 px-6">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl font-bold text-center text-gray-800 mb-12">
+            ¿Por qué elegir NutriFit?
+          </h2>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Feature 1 */}
+            <div className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:-translate-y-1">
+              <div className="text-4xl mb-4">🍎</div>
+              <h3 className="text-xl font-semibold text-gray-800 mb-3">Nutrición Personalizada</h3>
+              <p className="text-gray-600">
+                Planes alimentarios adaptados a tus necesidades, objetivos y preferencias dietéticas.
+              </p>
+            </div>
+
+            {/* Feature 2 */}
+            <div className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:-translate-y-1">
+              <div className="text-4xl mb-4">💪</div>
+              <h3 className="text-xl font-semibold text-gray-800 mb-3">Entrenamientos Efectivos</h3>
+              <p className="text-gray-600">
+                Rutinas de ejercicio diseñadas por profesionales para maximizar tus resultados.
+              </p>
+            </div>
+
+            {/* Feature 3 */}
+            <div className="bg-white rounded-xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:-translate-y-1">
+              <div className="text-4xl mb-4">📈</div>
+              <h3 className="text-xl font-semibold text-gray-800 mb-3">Seguimiento Completo</h3>
+              <p className="text-gray-600">
+                Monitorea tu progreso con métricas detalladas y análisis inteligentes.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Team Preview Section */}
+      <div className="py-16 px-6 bg-white">
+        <div className="max-w-6xl mx-auto text-center">
+          <h2 className="text-3xl font-bold text-gray-800 mb-4">
+            Nuestro Equipo de Expertos
+          </h2>
+          <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
+            Contamos con nutricionistas certificados, entrenadores personales y especialistas 
+            en bienestar para acompañarte en tu journey hacia una vida más saludable.
+          </p>
+          
+          <div className="flex justify-center gap-4 mb-8">
+            <div className="flex -space-x-4">
+              <img 
+                className="w-12 h-12 rounded-full border-4 border-white shadow-md" 
+                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face" 
+                alt="Team member" 
+              />
+              <img 
+                className="w-12 h-12 rounded-full border-4 border-white shadow-md" 
+                src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face" 
+                alt="Team member" 
+              />
+              <img 
+                className="w-12 h-12 rounded-full border-4 border-white shadow-md" 
+                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face" 
+                alt="Team member" 
+              />
+              <div className="w-12 h-12 rounded-full border-4 border-white shadow-md bg-gray-100 flex items-center justify-center text-gray-600 font-semibold text-sm">
+                +3
+              </div>
+            </div>
+          </div>
+          
+          <Link 
+            href="/users" 
+            className="inline-flex items-center gap-2 bg-gray-800 hover:bg-gray-900 text-white px-6 py-3 rounded-lg font-medium transition-colors"
+          >
+            Conocer al equipo completo
+            <span>→</span>
+          </Link>
+        </div>
+      </div>
+
+      {/* Stats Section */}
+      <div className="py-16 px-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 text-center">
+            <div className="bg-blue-50 rounded-xl p-6">
+              <div className="text-3xl font-bold text-blue-600 mb-2">1000+</div>
+              <div className="text-gray-600">Usuarios Activos</div>
+            </div>
+            <div className="bg-green-50 rounded-xl p-6">
+              <div className="text-3xl font-bold text-green-600 mb-2">50+</div>
+              <div className="text-gray-600">Planes Nutricionales</div>
+            </div>
+            <div className="bg-purple-50 rounded-xl p-6">
+              <div className="text-3xl font-bold text-purple-600 mb-2">24/7</div>
+              <div className="text-gray-600">Soporte Disponible</div>
+            </div>
+            <div className="bg-orange-50 rounded-xl p-6">
+              <div className="text-3xl font-bold text-orange-600 mb-2">95%</div>
+              <div className="text-gray-600">Satisfacción</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
   );
 }
