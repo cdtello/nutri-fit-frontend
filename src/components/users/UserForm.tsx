@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { CreateUserRequest } from '../../modules/users/types';
+import { useState, useEffect } from 'react';
+import { CreateUserRequest, User } from '../../modules/users/types';
 
 /**
  * Props para el componente UserForm
@@ -11,12 +11,13 @@ interface UserFormProps {
   onClose: () => void;
   onSubmit: (userData: CreateUserRequest) => void;
   isLoading?: boolean;
+  editUser?: User | null; // Usuario a editar (null para crear nuevo)
 }
 
 /**
  * Componente UserForm - Modal con formulario para crear/editar usuarios
  */
-export default function UserForm({ isOpen, onClose, onSubmit, isLoading = false }: UserFormProps) {
+export default function UserForm({ isOpen, onClose, onSubmit, isLoading = false, editUser = null }: UserFormProps) {
   const [formData, setFormData] = useState<CreateUserRequest>({
     name: '',
     email: '',
@@ -28,6 +29,33 @@ export default function UserForm({ isOpen, onClose, onSubmit, isLoading = false 
   });
 
   const [specialtyInput, setSpecialtyInput] = useState('');
+
+  // Efecto para cargar datos del usuario a editar
+  useEffect(() => {
+    if (editUser) {
+      setFormData({
+        name: editUser.name,
+        email: editUser.email,
+        role: editUser.role,
+        bio: editUser.bio || '',
+        phone: editUser.phone || '',
+        location: editUser.location || '',
+        specialties: editUser.specialties || []
+      });
+    } else {
+      // Resetear formulario para nuevo usuario
+      setFormData({
+        name: '',
+        email: '',
+        role: 'User',
+        bio: '',
+        phone: '',
+        location: '',
+        specialties: []
+      });
+    }
+    setSpecialtyInput('');
+  }, [editUser, isOpen]);
 
   // Manejar cambios en los inputs del formulario
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -82,7 +110,9 @@ export default function UserForm({ isOpen, onClose, onSubmit, isLoading = false 
       <div className="bg-white rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
-          <h2 className="text-2xl font-bold text-gray-800">➕ Agregar Nuevo Usuario</h2>
+          <h2 className="text-2xl font-bold text-gray-800">
+            {editUser ? '✏️ Editar Usuario' : '➕ Agregar Nuevo Usuario'}
+          </h2>
           <button 
             onClick={onClose}
             className="text-gray-400 hover:text-gray-600 text-2xl transition-colors"
@@ -149,6 +179,7 @@ export default function UserForm({ isOpen, onClose, onSubmit, isLoading = false 
               <option value="Nutritionist">🥗 Nutricionista</option>
               <option value="Trainer">🏋️ Entrenador</option>
               <option value="Admin">👑 Administrador</option>
+              <option value="Guest">👥 Invitado</option>
             </select>
           </div>
 
@@ -270,10 +301,10 @@ export default function UserForm({ isOpen, onClose, onSubmit, isLoading = false 
               {isLoading ? (
                 <>
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  Creando...
+                  {editUser ? 'Actualizando...' : 'Creando...'}
                 </>
               ) : (
-                <>✅ Crear Usuario</>
+                <>{editUser ? '💾 Actualizar Usuario' : '✅ Crear Usuario'}</>
               )}
             </button>
           </div>

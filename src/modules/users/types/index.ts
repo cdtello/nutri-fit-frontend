@@ -19,8 +19,8 @@ export interface User {
     stats?: UserStats;       // Estadísticas del usuario (opcional)
 }
 
-// Roles específicos del sistema
-export type UserRole = 'Admin' | 'Nutritionist' | 'Trainer' | 'User';
+// Roles específicos del sistema (deben coincidir con los del backend)
+export type UserRole = 'Admin' | 'Trainer' | 'Nutritionist' | 'User' | 'Guest';
 
 // Estados específicos del usuario
 export type UserStatus = 'active' | 'inactive';

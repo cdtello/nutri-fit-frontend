@@ -3,10 +3,18 @@ import Image from 'next/image';
 import { UserCardProps } from '../../modules/users/types';
 
 /**
+ * Props extendidas para UserCard con funciones de acción
+ */
+interface ExtendedUserCardProps extends UserCardProps {
+  onEdit?: (user: UserCardProps['user']) => void;
+  onDelete?: (user: UserCardProps['user']) => void;
+}
+
+/**
  * Componente UserCard - Tarjeta individual para mostrar información de un usuario
  * Se usa específicamente en la página de listado de usuarios (/users)
  */
-export default function UserCard({ user }: UserCardProps) {
+export default function UserCard({ user, onEdit, onDelete }: ExtendedUserCardProps) {
   // Función para obtener el color del rol
   const getRoleColor = (role: string) => {
     switch (role) {
@@ -87,11 +95,26 @@ export default function UserCard({ user }: UserCardProps) {
             href={`/users/${user.id}`}
             className="flex-1 bg-blue-500 hover:bg-blue-600 text-white text-sm py-2 px-4 rounded-lg transition-colors font-medium text-center"
           >
-            Ver Perfil
+            👁️ Ver Perfil
           </Link>
-          <button className="px-4 py-2 border border-gray-200 hover:border-gray-300 text-gray-600 hover:text-gray-700 text-sm rounded-lg transition-colors">
-            ⚙️
-          </button>
+          {onEdit && (
+            <button 
+              onClick={() => onEdit(user)}
+              className="px-3 py-2 bg-green-500 hover:bg-green-600 text-white text-sm rounded-lg transition-colors font-medium"
+              title="Editar usuario"
+            >
+              ✏️
+            </button>
+          )}
+          {onDelete && (
+            <button 
+              onClick={() => onDelete(user)}
+              className="px-3 py-2 bg-red-500 hover:bg-red-600 text-white text-sm rounded-lg transition-colors font-medium"
+              title="Eliminar usuario"
+            >
+              🗑️
+            </button>
+          )}
         </div>
       </div>
     </div>

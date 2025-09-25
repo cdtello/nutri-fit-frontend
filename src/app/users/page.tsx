@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { UserCard, UserForm } from '../../components/users';
-import { User, CreateUserRequest } from '../../modules/users/types';
-import { getAllUsers, createUser } from '../../modules/users/services/usersService';
+import { User, CreateUserRequest, UpdateUserRequest } from '../../modules/users/types';
+import { getAllUsers, createUser, updateUser, deleteUser } from '../../modules/users/services/usersService';
 
 /**
  * Página principal de usuarios con funcionalidad de agregar nuevos usuarios
@@ -14,6 +14,7 @@ export default function Users() {
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [isCreating, setIsCreating] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [editingUser, setEditingUser] = useState<User | null>(null);
 
     // Cargar usuarios al montar el componente
     useEffect(() => {
@@ -35,24 +36,74 @@ export default function Users() {
         }
     };
 
-    // Manejar la creación de un nuevo usuario
-    const handleCreateUser = async (userData: CreateUserRequest) => {
+    // Manejar la creación/edición de un usuario
+    const handleSubmitUser = async (userData: CreateUserRequest) => {
         try {
             setIsCreating(true);
-            const newUser = await createUser(userData);
+            
+            if (editingUser) {
+                // Actualizar usuario existente
+                const updateData: UpdateUserRequest = {
+                    id: editingUser.id,
+                    ...userData
+                };
+                await updateUser(updateData);
+                alert(`✅ Usuario "${userData.name}" actualizado exitosamente!`);
+            } else {
+                // Crear nuevo usuario
+                const newUser = await createUser(userData);
+                alert(`✅ Usuario "${newUser.name}" creado exitosamente!`);
+            }
             
             // Recargar la lista completa desde el backend
             await loadUsers();
             setIsFormOpen(false);
+            setEditingUser(null);
             
-            // Mostrar mensaje de éxito (puedes agregar una librería de toast aquí)
-            alert(`✅ Usuario "${newUser.name}" creado exitosamente!`);
         } catch (error) {
-            console.error('Error creating user:', error);
-            alert('❌ Error al crear el usuario. Verifica que el backend esté corriendo y funcionando correctamente.');
+            console.error('Error submitting user:', error);
+            const action = editingUser ? 'actualizar' : 'crear';
+            alert(`❌ Error al ${action} el usuario. Verifica que el backend esté corriendo y funcionando correctamente.`);
         } finally {
             setIsCreating(false);
         }
+    };
+
+    // Manejar la edición de un usuario
+    const handleEditUser = (user: User) => {
+        setEditingUser(user);
+        setIsFormOpen(true);
+    };
+
+    // Manejar la eliminación de un usuario
+    const handleDeleteUser = async (user: User) => {
+        const confirmed = window.confirm(
+            `¿Estás seguro de que quieres eliminar a "${user.name}"?\n\nEsta acción no se puede deshacer.`
+        );
+        
+        if (!confirmed) return;
+
+        try {
+            setError(null);
+            const success = await deleteUser(user.id);
+            
+            if (success) {
+                // Recargar la lista desde el backend
+                await loadUsers();
+                alert(`✅ Usuario "${user.name}" eliminado exitosamente.`);
+            } else {
+                alert(`❌ No se pudo eliminar el usuario "${user.name}". Es posible que ya no exista.`);
+            }
+        } catch (error) {
+            console.error('Error deleting user:', error);
+            alert(`❌ Error al eliminar el usuario "${user.name}". Verifica que el backend esté funcionando.`);
+        }
+    };
+
+    // Función para abrir modal de creación
+    const handleCreateNew = () => {
+        setEditingUser(null);
+        setIsFormOpen(true);
     };
 
     if (isLoading) {
@@ -101,7 +152,7 @@ export default function Users() {
                         </p>
                     </div>
                     <button
-                        onClick={() => setIsFormOpen(true)}
+                        onClick={handleCreateNew}
                         className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors flex items-center gap-2 shadow-md hover:shadow-lg"
                     >
                         ➕ Agregar Usuario
@@ -112,7 +163,12 @@ export default function Users() {
                 {users.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         {users.map((user) => (
-                            <UserCard key={user.id} user={user} />
+                            <UserCard 
+                                key={user.id} 
+                                user={user} 
+                                onEdit={handleEditUser}
+                                onDelete={handleDeleteUser}
+                            />
                         ))}
                     </div>
                 ) : (
@@ -129,7 +185,7 @@ export default function Users() {
                         </p>
                         {!error && (
                             <button
-                                onClick={() => setIsFormOpen(true)}
+                                onClick={handleCreateNew}
                                 className="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg font-medium transition-colors inline-flex items-center gap-2"
                             >
                                 ➕ Agregar Primer Usuario
@@ -141,9 +197,13 @@ export default function Users() {
                 {/* Modal de formulario */}
                 <UserForm
                     isOpen={isFormOpen}
-                    onClose={() => setIsFormOpen(false)}
-                    onSubmit={handleCreateUser}
+                    onClose={() => {
+                        setIsFormOpen(false);
+                        setEditingUser(null);
+                    }}
+                    onSubmit={handleSubmitUser}
                     isLoading={isCreating}
+                    editUser={editingUser}
                 />
             </div>
         </div>

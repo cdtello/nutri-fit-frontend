@@ -11,6 +11,3 @@ export * from './types';
 
 // Servicios
 export * from './services/usersService';
-
-// Datos de ejemplo
-export { SAMPLE_USERS } from './data';

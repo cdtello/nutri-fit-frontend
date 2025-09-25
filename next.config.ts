@@ -3,6 +3,16 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   /* config options here */
   
+  // Proxy para evitar CORS con el backend
+  async rewrites() {
+    return [
+      {
+        source: '/api/users/:path*',
+        destination: 'http://localhost:3001/users/:path*',
+      },
+    ];
+  },
+  
   // Configuración para optimización de imágenes externas
   images: {
     remotePatterns: [

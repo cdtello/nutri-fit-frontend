@@ -6,8 +6,37 @@
 
 import { User, CreateUserRequest, UpdateUserRequest, UserFilters } from '../types';
 
-const API_BASE_URL = 'http://localhost:3001';
-const USERS_ENDPOINT = `${API_BASE_URL}/users`;
+// Usar proxy de Next.js para evitar CORS
+const USERS_ENDPOINT = '/api/users';
+
+/**
+ * Mapeo de roles del frontend al backend
+ * Roles aceptados por el backend: admin, trainer, nutritionist, user, guest
+ */
+const ROLE_MAPPING = {
+  'Admin': 'admin',           // 👑 Administrador del sistema
+  'Trainer': 'trainer',       // 🏋️ Entrenador personal
+  'Nutritionist': 'nutritionist', // 🥗 Nutricionista
+  'User': 'user',             // 👤 Usuario regular (valor por defecto)
+  'Guest': 'guest'            // 👥 Usuario invitado
+} as const;
+
+/**
+ * Transforma los datos del frontend al formato que espera el backend
+ */
+function transformUserDataForBackend(userData: CreateUserRequest) {
+  return {
+    name: userData.name,
+    email: userData.email,
+    role: ROLE_MAPPING[userData.role],
+    ...(userData.bio && { bio: userData.bio }),
+    ...(userData.phone && { phone: userData.phone }),
+    ...(userData.location && { location: userData.location }),
+    ...(userData.specialties && userData.specialties.length > 0 && { 
+      specialties: userData.specialties 
+    })
+  };
+}
 
 /**
  * Manejo de errores de la API
@@ -41,12 +70,19 @@ async function handleResponse<T>(response: Response): Promise<T> {
  */
 export async function getAllUsers(): Promise<User[]> {
   try {
+    console.log('📤 GET:', USERS_ENDPOINT);
+    
     const response = await fetch(USERS_ENDPOINT, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
       },
     });
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new ApiError(`Backend error: ${response.status} - ${errorText}`, response.status);
+    }
     
     return await handleResponse<User[]>(response);
   } catch (error) {
@@ -60,6 +96,8 @@ export async function getAllUsers(): Promise<User[]> {
  */
 export async function getUserById(id: number): Promise<User | null> {
   try {
+    console.log(`📤 GET: ${USERS_ENDPOINT}/${id}`);
+    
     const response = await fetch(`${USERS_ENDPOINT}/${id}`, {
       method: 'GET',
       headers: {
@@ -108,13 +146,23 @@ export function filterUsers(users: User[], filters: UserFilters): User[] {
  */
 export async function createUser(userData: CreateUserRequest): Promise<User> {
   try {
+    console.log('📤 POST:', USERS_ENDPOINT);
+    
+    // Transformar datos al formato del backend
+    const backendData = transformUserDataForBackend(userData);
+    
     const response = await fetch(USERS_ENDPOINT, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(userData),
+      body: JSON.stringify(backendData),
     });
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new ApiError(`Backend error: ${response.status} - ${errorText}`, response.status);
+    }
     
     return await handleResponse<User>(response);
   } catch (error) {
@@ -124,20 +172,41 @@ export async function createUser(userData: CreateUserRequest): Promise<User> {
 }
 
 /**
+ * Transforma los datos de actualización al formato del backend
+ */
+function transformUpdateDataForBackend(userData: UpdateUserRequest) {
+  const { id: _id, ...updateData } = userData;
+  return {
+    ...updateData,
+    ...(updateData.role && { role: ROLE_MAPPING[updateData.role] })
+  };
+}
+
+/**
  * Actualiza un usuario en el backend
  */
 export async function updateUser(userData: UpdateUserRequest): Promise<User | null> {
   try {
+    console.log(`📤 PUT: ${USERS_ENDPOINT}/${userData.id}`);
+    
+    // Transformar datos al formato del backend
+    const backendData = transformUpdateDataForBackend(userData);
+    
     const response = await fetch(`${USERS_ENDPOINT}/${userData.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(userData),
+      body: JSON.stringify(backendData),
     });
     
     if (response.status === 404) {
       return null;
+    }
+    
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new ApiError(`Backend error: ${response.status} - ${errorText}`, response.status);
     }
     
     return await handleResponse<User>(response);
@@ -152,6 +221,8 @@ export async function updateUser(userData: UpdateUserRequest): Promise<User | nu
  */
 export async function deleteUser(id: number): Promise<boolean> {
   try {
+    console.log(`📤 DELETE: ${USERS_ENDPOINT}/${id}`);
+    
     const response = await fetch(`${USERS_ENDPOINT}/${id}`, {
       method: 'DELETE',
       headers: {
@@ -163,7 +234,12 @@ export async function deleteUser(id: number): Promise<boolean> {
       return false;
     }
     
-    return response.ok;
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new ApiError(`Backend error: ${response.status} - ${errorText}`, response.status);
+    }
+    
+    return true;
   } catch (error) {
     console.error(`Error deleting user ${id}:`, error);
     throw error;
