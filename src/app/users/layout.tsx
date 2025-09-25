@@ -39,7 +39,7 @@ export default function UsersLayout({ children }: { children: React.ReactNode })
         <div className="bg-gradient-to-br from-blue-50 via-white to-green-50 min-h-screen">
             {/* Team Management Navigation Header */}
             <div className="bg-white border-b border-gray-200 shadow-sm">
-                <div className="max-w-7xl mx-auto px-6 py-6">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
                     {/* Breadcrumbs */}
                     <nav className="mb-4">
                         <ol className="flex items-center gap-2 text-sm">
@@ -63,22 +63,23 @@ export default function UsersLayout({ children }: { children: React.ReactNode })
                         </ol>
                     </nav>
                     
-                    {/* Section Navigation */}
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-6">
+                    {/* Section Navigation - Responsive */}
+                    <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                        {/* Navigation Links */}
+                        <div className="flex flex-wrap items-center gap-2 lg:gap-6">
                             <Link 
                                 href="/users"
-                                className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                                className={`px-3 py-2 lg:px-4 rounded-lg font-medium transition-all text-sm lg:text-base ${
                                     pathname === '/users' 
                                         ? 'bg-blue-100 text-blue-700 shadow-sm' 
                                         : 'text-gray-600 hover:bg-gray-100'
                                 }`}
                             >
-                                👥 Ver Equipo
+                                👥 <span className="hidden sm:inline">Ver Equipo</span><span className="sm:hidden">Equipo</span>
                             </Link>
                             <Link 
                                 href="/users/roles"
-                                className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                                className={`px-3 py-2 lg:px-4 rounded-lg font-medium transition-all text-sm lg:text-base ${
                                     pathname === '/users/roles' 
                                         ? 'bg-blue-100 text-blue-700 shadow-sm' 
                                         : 'text-gray-600 hover:bg-gray-100'
@@ -88,22 +89,19 @@ export default function UsersLayout({ children }: { children: React.ReactNode })
                             </Link>
                             <Link 
                                 href="/users/settings"
-                                className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                                className={`px-3 py-2 lg:px-4 rounded-lg font-medium transition-all text-sm lg:text-base ${
                                     pathname === '/users/settings' 
                                         ? 'bg-blue-100 text-blue-700 shadow-sm' 
                                         : 'text-gray-600 hover:bg-gray-100'
                                 }`}
                             >
-                                ⚙️ Configuración
+                                ⚙️ <span className="hidden sm:inline">Configuración</span><span className="sm:hidden">Config</span>
                             </Link>
                         </div>
                         
-                        <div className="flex items-center gap-3">
-                            <button className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2">
-                                <span>➕</span>
-                                Agregar Usuario
-                            </button>
-                            <button className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium transition-colors">
+                        {/* Action Buttons - Responsive */}
+                        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 lg:gap-3">
+                            <button className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-2 lg:px-4 rounded-lg font-medium transition-colors text-sm lg:text-base text-center">
                                 📊 Reportes
                             </button>
                         </div>
@@ -111,26 +109,26 @@ export default function UsersLayout({ children }: { children: React.ReactNode })
                 </div>
             </div>
             
-            {/* Team Statistics Dashboard (solo en página principal de users) */}
+            {/* Team Statistics Dashboard (solo en página principal de users) - Responsive */}
             {pathname === '/users' && (
                 <div className="bg-gradient-to-r from-blue-500 to-green-500 text-white">
-                    <div className="max-w-7xl mx-auto px-6 py-4">
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
-                            <div className="bg-white/10 rounded-lg p-3 backdrop-blur-sm hover:bg-white/20 transition-colors">
-                                <div className="text-2xl font-bold">6</div>
-                                <div className="text-sm opacity-90">Total Miembros</div>
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-6 text-center">
+                            <div className="bg-white/10 rounded-lg p-3 lg:p-4 backdrop-blur-sm hover:bg-white/20 transition-colors">
+                                <div className="text-xl lg:text-2xl font-bold">6</div>
+                                <div className="text-xs lg:text-sm opacity-90">Total Miembros</div>
                             </div>
-                            <div className="bg-white/10 rounded-lg p-3 backdrop-blur-sm hover:bg-white/20 transition-colors">
-                                <div className="text-2xl font-bold">5</div>
-                                <div className="text-sm opacity-90">Activos</div>
+                            <div className="bg-white/10 rounded-lg p-3 lg:p-4 backdrop-blur-sm hover:bg-white/20 transition-colors">
+                                <div className="text-xl lg:text-2xl font-bold">5</div>
+                                <div className="text-xs lg:text-sm opacity-90">Activos</div>
                             </div>
-                            <div className="bg-white/10 rounded-lg p-3 backdrop-blur-sm hover:bg-white/20 transition-colors">
-                                <div className="text-2xl font-bold">3</div>
-                                <div className="text-sm opacity-90">Roles Diferentes</div>
+                            <div className="bg-white/10 rounded-lg p-3 lg:p-4 backdrop-blur-sm hover:bg-white/20 transition-colors">
+                                <div className="text-xl lg:text-2xl font-bold">3</div>
+                                <div className="text-xs lg:text-sm opacity-90">Roles Diferentes</div>
                             </div>
-                            <div className="bg-white/10 rounded-lg p-3 backdrop-blur-sm hover:bg-white/20 transition-colors">
-                                <div className="text-2xl font-bold">83%</div>
-                                <div className="text-sm opacity-90">Tasa Actividad</div>
+                            <div className="bg-white/10 rounded-lg p-3 lg:p-4 backdrop-blur-sm hover:bg-white/20 transition-colors">
+                                <div className="text-xl lg:text-2xl font-bold">83%</div>
+                                <div className="text-xs lg:text-sm opacity-90">Tasa Actividad</div>
                             </div>
                         </div>
                     </div>

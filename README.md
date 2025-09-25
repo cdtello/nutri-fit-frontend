@@ -11,6 +11,84 @@ Una aplicación llamada **NutriFit** - una plataforma para gestión de equipos d
 - 📱 Diseño responsive y moderno
 - 🛣️ Rutas dinámicas y estáticas
 
+## 🤔 Conceptos Fundamentales: Server Side vs Client Side
+
+### 🖥️ ¿Qué es Server Side?
+
+**Server Side** (lado del servidor) es donde el código se ejecuta en el servidor antes de enviar la página al navegador del usuario.
+
+**¿Para qué sirve?**
+- 🔒 **Seguridad**: Procesar datos sensibles de forma segura
+- ⚡ **Rendimiento**: Generar contenido rápido y optimizado
+- 🔍 **SEO**: Los motores de búsqueda pueden leer el contenido fácilmente
+- 📊 **Datos**: Conectar directamente con bases de datos
+
+**Ejemplo en Next.js:**
+```tsx
+// Esto se ejecuta en el SERVIDOR
+export default async function BlogPost({ params }) {
+  // Esta consulta se hace en el servidor
+  const post = await database.getPost(params.id);
+  
+  return <h1>{post.title}</h1>; // HTML ya generado
+}
+```
+
+### 💻 ¿Qué es Client Side?
+
+**Client Side** (lado del cliente) es donde el código se ejecuta en el navegador del usuario después de que la página ya se cargó.
+
+**¿Para qué sirve?**
+- 🎮 **Interactividad**: Botones, formularios, animaciones
+- 🔄 **Actualizaciones dinámicas**: Cambiar contenido sin recargar
+- 💾 **Estados locales**: Recordar datos temporales del usuario
+- 🎨 **Efectos visuales**: Transiciones suaves y UX moderna
+
+**Ejemplo en Next.js:**
+```tsx
+'use client' // Esta directiva indica que es Client Side
+
+import { useState } from 'react';
+
+export default function Counter() {
+  // Este estado vive en el NAVEGADOR del usuario
+  const [count, setCount] = useState(0);
+  
+  return (
+    <button onClick={() => setCount(count + 1)}>
+      Clicks: {count} {/* Se actualiza sin recargar */}
+    </button>
+  );
+}
+```
+
+### 🤝 ¿Cómo los combina Next.js?
+
+Next.js es **híbrido** - usa lo mejor de ambos mundos:
+
+1. **Primera carga (Server Side):**
+   - ⚡ El servidor genera HTML completo
+   - 🚀 La página aparece super rápido
+   - 🔍 Google puede indexar el contenido
+
+2. **Después (Client Side):**
+   - 💻 JavaScript se activa en el navegador  
+   - 🎮 Los botones y formularios empiezan a funcionar
+   - 🔄 La navegación se vuelve súper rápida
+
+### 📋 Resumen: ¿Cuándo usar cada uno?
+
+| Necesitas... | Usa Server Side | Usa Client Side |
+|--------------|----------------|-----------------|
+| Datos de base de datos | ✅ | ❌ |
+| SEO optimizado | ✅ | ❌ |
+| Información sensible | ✅ | ❌ |
+| Botones interactivos | ❌ | ✅ |
+| Formularios dinámicos | ❌ | ✅ |
+| Estados temporales | ❌ | ✅ |
+
+---
+
 ## 📚 Índice de Sesiones
 
 - [Sesión 1: Creando nuestro primer proyecto Next.js](#sesión-1-creando-nuestro-primer-proyecto-nextjs)
